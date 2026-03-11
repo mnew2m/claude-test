@@ -66,7 +66,7 @@ export function DatePickerSheet({
 
   return (
     <Modal open={open} onClose={onClose} title={title ?? (mode === 'datetime' ? '날짜 & 시간' : '날짜 선택')}>
-      <div className="px-4 pb-6 space-y-4">
+      <div className="px-4 pt-5 pb-6 space-y-4">
 
         {/* Month navigation */}
         <div className="flex items-center justify-between">
