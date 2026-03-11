@@ -7,8 +7,14 @@ interface AppShellProps {
 
 export function AppShell({ children }: AppShellProps) {
   return (
-    <div className="min-h-screen bg-background">
-      <main className="max-w-lg mx-auto pb-[calc(56px+env(safe-area-inset-bottom,8px))] min-h-screen">
+    <div className="min-h-screen" style={{ background: 'var(--color-grouped-bg)' }}>
+      <main
+        className="mx-auto pb-[calc(56px+env(safe-area-inset-bottom,8px))] min-h-screen w-full"
+        style={{
+          maxWidth: '480px',
+          background: 'var(--color-background)',
+        }}
+      >
         {children}
       </main>
       <BottomNav />

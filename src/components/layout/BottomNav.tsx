@@ -86,14 +86,13 @@ export function BottomNav() {
     <nav
       className="fixed bottom-0 left-0 right-0 z-40 safe-bottom"
       style={{
-        background: 'var(--color-card)',
         borderTop: '0.5px solid var(--color-separator)',
         backdropFilter: 'blur(20px) saturate(180%)',
         WebkitBackdropFilter: 'blur(20px) saturate(180%)',
-        backgroundColor: 'color-mix(in srgb, var(--color-card) 85%, transparent)',
+        background: 'color-mix(in srgb, var(--color-card) 90%, transparent)',
       }}
     >
-      <div className="max-w-lg mx-auto flex">
+      <div className="mx-auto flex" style={{ maxWidth: '480px' }}>
         {NAV_ITEMS.map(item => (
           <NavLink
             key={item.to}

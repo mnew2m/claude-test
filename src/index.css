@@ -11,7 +11,7 @@
   --color-background-secondary: #ffffff;
   --color-card:                 #ffffff;
   --color-card-secondary:       #f2f2f7;
-  --color-grouped-bg:           #f2f2f7;
+  --color-grouped-bg:           #e8e8ed;
   --color-border:               rgba(60,60,67,0.18);
   --color-separator:            rgba(60,60,67,0.29);
   --color-primary:              #000000;
@@ -30,7 +30,7 @@
   --color-background-secondary: #1c1c1e;
   --color-card:                 #1c1c1e;
   --color-card-secondary:       #2c2c2e;
-  --color-grouped-bg:           #000000;
+  --color-grouped-bg:           #0a0a0a;
   --color-border:               rgba(84,84,88,0.65);
   --color-separator:            rgba(84,84,88,0.65);
   --color-primary:              #ffffff;
@@ -53,6 +53,7 @@
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
     overscroll-behavior: none;
+    overflow-x: hidden;
   }
 
   input, textarea, select, button {
@@ -81,7 +82,7 @@
   .shadow-modal         { box-shadow: var(--shadow-modal); }
 
   /* iOS safe area */
-  .pt-safe      { padding-top: max(env(safe-area-inset-top), 0px); }
+  .pt-safe      { padding-top: max(env(safe-area-inset-top), 14px); }
   .pb-safe      { padding-bottom: max(env(safe-area-inset-bottom), 0px); }
   .safe-bottom  { padding-bottom: max(env(safe-area-inset-bottom), 8px); }
 

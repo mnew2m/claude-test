@@ -10,7 +10,7 @@ export function AuthPage() {
       {/* Top spacer */}
       <div className="flex-1 max-flex-[2]" />
 
-      <div className="px-6 pb-10">
+      <div className="px-6 pb-10 w-full mx-auto" style={{ maxWidth: '480px' }}>
         {/* Logo */}
         <div className="text-center mb-10">
           <div
