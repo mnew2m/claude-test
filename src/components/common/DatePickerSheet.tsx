@@ -47,7 +47,12 @@ export function DatePickerSheet({
     onClose()
   }
 
-  const handleClear = () => { onChange(''); onClose() }
+  const todayDate = new Date()
+  const isSelectedToday = selected ? isSameDay(selected, todayDate) : false
+  const handleResetToToday = () => {
+    setSelected(todayDate)
+    setMonth(todayDate)
+  }
 
   const selectStyle = {
     background: 'var(--color-fill)',
@@ -187,11 +192,12 @@ export function DatePickerSheet({
         {/* Buttons */}
         <div className="flex gap-2">
           <button
-            onClick={handleClear}
-            className="flex-1 py-3 rounded-xl text-[15px] font-medium text-secondary border transition-opacity active:opacity-50"
+            onClick={handleResetToToday}
+            disabled={isSelectedToday}
+            className="flex-1 py-3 rounded-xl text-[15px] font-medium text-secondary border transition-opacity active:opacity-50 disabled:opacity-30"
             style={{ borderColor: 'var(--color-separator)' }}
           >
-            초기화
+            오늘로
           </button>
           <button
             onClick={handleConfirm}
