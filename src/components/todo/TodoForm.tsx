@@ -1,5 +1,8 @@
 import { useState } from 'react'
+import { format, parseISO } from 'date-fns'
+import { ko } from 'date-fns/locale'
 import { Modal } from '../common/Modal'
+import { DatePickerSheet } from '../common/DatePickerSheet'
 import { RecurrencePicker } from './RecurrencePicker'
 import { CategoryPicker } from '../common/CategoryPicker'
 import { TagInput } from '../common/TagInput'
@@ -33,7 +36,9 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
   const [tags, setTags] = useState<string[]>(initialValues?.tags ?? [])
   const [recurrence, setRecurrence] = useState<Recurrence>(initialValues?.recurrence ?? defaultRecurrence)
   const [reminderTime, setReminderTime] = useState(initialValues?.reminderTime ? initialValues.reminderTime.substring(0, 16) : '')
-  const [showRecurrence, setShowRecurrence] = useState(false)
+  const [showRecurrence,  setShowRecurrence]  = useState(false)
+  const [showDatePicker,  setShowDatePicker]  = useState(false)
+  const [showTimePicker,  setShowTimePicker]  = useState(false)
 
   const handleSubmit = () => {
     if (!title.trim()) return
@@ -53,6 +58,7 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
   const rowStyle = { borderBottom: '0.5px solid var(--color-separator)' }
 
   return (
+    <>
     <Modal open={open} onClose={onClose} title={initialValues ? '할일 수정' : '새 할일'}>
       <div className="px-4 pt-3 pb-6 space-y-4">
 
@@ -82,23 +88,29 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
         <div style={sectionStyle}>
           <div className="flex items-center px-4 py-3" style={rowStyle}>
             <span className="text-[16px] text-primary flex-1">마감일</span>
-            <input
-              type="date"
-              value={dueDate}
-              onChange={e => setDueDate(e.target.value)}
-              className="text-[15px] outline-none"
-              style={{ background: 'transparent', color: dueDate ? 'var(--color-accent)' : 'var(--color-muted)' }}
-            />
+            <button
+              type="button"
+              onClick={() => setShowDatePicker(true)}
+              className="text-[15px] transition-opacity active:opacity-50"
+              style={{ color: dueDate ? 'var(--color-accent)' : 'var(--color-muted)' }}
+            >
+              {dueDate
+                ? format(parseISO(dueDate), 'M월 d일 (E)', { locale: ko })
+                : '날짜 없음'}
+            </button>
           </div>
           <div className="flex items-center px-4 py-3">
             <span className="text-[16px] text-primary flex-1">알림</span>
-            <input
-              type="datetime-local"
-              value={reminderTime}
-              onChange={e => setReminderTime(e.target.value)}
-              className="text-[15px] outline-none"
-              style={{ background: 'transparent', color: reminderTime ? 'var(--color-accent)' : 'var(--color-muted)' }}
-            />
+            <button
+              type="button"
+              onClick={() => setShowTimePicker(true)}
+              className="text-[15px] transition-opacity active:opacity-50"
+              style={{ color: reminderTime ? 'var(--color-accent)' : 'var(--color-muted)' }}
+            >
+              {reminderTime
+                ? format(new Date(reminderTime), 'M월 d일 HH:mm', { locale: ko })
+                : '설정 안 함'}
+            </button>
           </div>
         </div>
 
@@ -162,5 +174,23 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
         </button>
       </div>
     </Modal>
+
+    <DatePickerSheet
+      open={showDatePicker}
+      onClose={() => setShowDatePicker(false)}
+      value={dueDate}
+      onChange={setDueDate}
+      mode="date"
+      title="마감일"
+    />
+    <DatePickerSheet
+      open={showTimePicker}
+      onClose={() => setShowTimePicker(false)}
+      value={reminderTime}
+      onChange={setReminderTime}
+      mode="datetime"
+      title="알림 시간"
+    />
+    </>
   )
 }
