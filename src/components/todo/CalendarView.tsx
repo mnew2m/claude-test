@@ -136,17 +136,17 @@ export function CalendarView({ todos, categories, onComplete, onUncomplete, onDe
 
                 {/* 할일 도트 */}
                 {dayTodos.length > 0 && (
-                  <div className="flex gap-0.5 flex-wrap justify-center max-w-[28px]">
+                  <div className="flex items-center gap-0.5">
                     {dayTodos.slice(0, 3).map((t, i) => (
                       <div
                         key={i}
-                        className="w-1.5 h-1.5 rounded-full"
+                        className="w-1.5 h-1.5 rounded-full flex-shrink-0"
                         style={{
                           background: t.completed
-                            ? 'var(--color-muted)'
+                            ? 'var(--color-accent)'
                             : hasOverdue
                             ? '#ef4444'
-                            : 'var(--color-accent)',
+                            : 'var(--color-muted)',
                         }}
                       />
                     ))}
