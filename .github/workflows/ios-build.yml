@@ -1,9 +1,7 @@
 name: iOS Build
 
 on:
-  push:
-    branches: [main]
-  workflow_dispatch: # 수동 실행 버튼
+  workflow_dispatch: # 수동 실행 버튼 (필요할 때만 직접 실행)
 
 jobs:
   build-ios:
