@@ -1,5 +1,5 @@
 import { useMemo } from 'react'
-import { subDays, format, parseISO, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns'
+import { subDays, subMonths, startOfMonth, endOfMonth, format, parseISO, startOfWeek, endOfWeek, eachDayOfInterval } from 'date-fns'
 import type { Todo, Habit, HabitCompletion, StatsData } from '../types'
 
 export function useStats(todos: Todo[], habits: Habit[], completions: HabitCompletion[]) {
@@ -20,14 +20,19 @@ export function useStats(todos: Todo[], habits: Habit[], completions: HabitCompl
   }, [todos])
 
   const monthlyTodoStats = useMemo((): StatsData[] => {
-    return Array.from({ length: 30 }, (_, i) => {
-      const date = subDays(new Date(), 29 - i)
-      const dateStr = format(date, 'yyyy-MM-dd')
-      const dayTodos = todos.filter(t => t.dueDate?.startsWith(dateStr))
-      const completed = dayTodos.filter(t => t.completed).length
-      const total = dayTodos.length
+    return Array.from({ length: 6 }, (_, i) => {
+      const monthDate = subMonths(new Date(), 5 - i)
+      const monthTodos = todos.filter(t => {
+        if (!t.dueDate) return false
+        const d = t.dueDate.substring(0, 7)
+        return d === format(monthDate, 'yyyy-MM')
+      })
+      const completed = monthTodos.filter(t => t.completed).length
+      const total = monthTodos.length
+      const year = format(monthDate, 'yy')
+      const month = format(monthDate, 'M')
       return {
-        date: format(date, 'M/d'),
+        date: `${year}.${month}`,
         completed,
         total,
         rate: total > 0 ? Math.round((completed / total) * 100) : 0,
