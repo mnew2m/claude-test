@@ -6,9 +6,11 @@ import {
 } from 'date-fns'
 import { ko } from 'date-fns/locale'
 import { TodoList } from './TodoList'
+import { Modal } from '../common/Modal'
 import type { Todo, Category } from '../../types'
 
 const DAY_LABELS = ['일', '월', '화', '수', '목', '금', '토']
+const MONTH_LABELS = ['1월', '2월', '3월', '4월', '5월', '6월', '7월', '8월', '9월', '10월', '11월', '12월']
 
 interface CalendarViewProps {
   todos: Todo[]
@@ -23,6 +25,8 @@ interface CalendarViewProps {
 export function CalendarView({ todos, categories, onComplete, onUncomplete, onDelete, onEdit, onAdd }: CalendarViewProps) {
   const [currentMonth, setCurrentMonth] = useState(new Date())
   const [selectedDate, setSelectedDate] = useState<Date>(new Date())
+  const [pickerOpen, setPickerOpen] = useState(false)
+  const [pickerYear, setPickerYear] = useState(new Date().getFullYear())
 
   const monthStart  = startOfMonth(currentMonth)
   const monthEnd    = endOfMonth(currentMonth)
@@ -35,10 +39,19 @@ export function CalendarView({ todos, categories, onComplete, onUncomplete, onDe
 
   const selectedTodos = todosForDay(selectedDate)
 
+  const today = new Date()
+
+  const handlePickerSelect = (monthIndex: number) => {
+    const next = new Date(pickerYear, monthIndex, 1)
+    setCurrentMonth(next)
+    setPickerOpen(false)
+  }
+
   return (
     <div>
       {/* ── 월 네비게이션 ── */}
-      <div className="flex items-center justify-between px-4 py-3">
+      <div className="flex items-center px-4 py-3">
+        {/* 왼쪽: 이전 달 */}
         <button
           onClick={() => setCurrentMonth(m => subMonths(m, 1))}
           className="w-9 h-9 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
@@ -50,13 +63,20 @@ export function CalendarView({ todos, categories, onComplete, onUncomplete, onDe
           </svg>
         </button>
 
-        <button
-          onClick={() => { setCurrentMonth(new Date()); setSelectedDate(new Date()) }}
-          className="text-[17px] font-semibold text-primary tracking-[-0.3px]"
-        >
-          {format(currentMonth, 'yyyy년 M월', { locale: ko })}
-        </button>
+        {/* 중앙: 연월 피커 버튼 (항상 고정 중앙) */}
+        <div className="flex-1 flex justify-center">
+          <button
+            onClick={() => { setPickerYear(currentMonth.getFullYear()); setPickerOpen(true) }}
+            className="flex items-center gap-1 text-[17px] font-semibold text-primary tracking-[-0.3px] transition-opacity active:opacity-60"
+          >
+            {format(currentMonth, 'yyyy년 M월', { locale: ko })}
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" style={{ color: 'var(--color-muted)', marginTop: 1 }}>
+              <path d="M19 9l-7 7-7-7" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+            </svg>
+          </button>
+        </div>
 
+        {/* 오른쪽: 다음 달 */}
         <button
           onClick={() => setCurrentMonth(m => addMonths(m, 1))}
           className="w-9 h-9 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
@@ -68,6 +88,65 @@ export function CalendarView({ todos, categories, onComplete, onUncomplete, onDe
           </svg>
         </button>
       </div>
+
+      {/* ── 연월 피커 모달 ── */}
+      <Modal open={pickerOpen} onClose={() => setPickerOpen(false)} title="연월 선택">
+        <div className="px-4 pt-3 pb-6 space-y-4">
+          {/* 연도 선택 */}
+          <div className="flex items-center justify-between">
+            <button
+              onClick={() => setPickerYear(y => y - 1)}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
+              style={{ background: 'var(--color-fill)' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M15 18l-6-6 6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+            <span className="text-[17px] font-semibold text-primary">{pickerYear}년</span>
+            <button
+              onClick={() => setPickerYear(y => y + 1)}
+              className="w-9 h-9 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
+              style={{ background: 'var(--color-fill)' }}
+            >
+              <svg width="16" height="16" viewBox="0 0 24 24" fill="none">
+                <path d="M9 18l6-6-6-6" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+              </svg>
+            </button>
+          </div>
+
+          {/* 월 그리드 */}
+          <div className="grid grid-cols-3 gap-2">
+            {MONTH_LABELS.map((label, i) => {
+              const isSelected = pickerYear === currentMonth.getFullYear() && i === currentMonth.getMonth()
+              const isThisMonth = pickerYear === today.getFullYear() && i === today.getMonth()
+              return (
+                <button
+                  key={i}
+                  onClick={() => handlePickerSelect(i)}
+                  className="py-3 rounded-xl text-[15px] font-medium transition-all active:scale-95"
+                  style={{
+                    background: isSelected ? 'var(--color-accent)' : isThisMonth ? 'color-mix(in srgb, var(--color-accent) 12%, transparent)' : 'var(--color-fill)',
+                    color: isSelected ? 'white' : isThisMonth ? 'var(--color-accent)' : 'var(--color-primary)',
+                    fontWeight: isSelected || isThisMonth ? 600 : 400,
+                  }}
+                >
+                  {label}
+                </button>
+              )
+            })}
+          </div>
+
+          {/* 초기화 버튼 */}
+          <button
+            onClick={() => { setCurrentMonth(new Date()); setSelectedDate(new Date()); setPickerOpen(false) }}
+            className="w-full py-3 rounded-xl text-[15px] font-medium border transition-opacity active:opacity-50"
+            style={{ borderColor: 'var(--color-separator)', color: 'var(--color-secondary)' }}
+          >
+            오늘로 초기화
+          </button>
+        </div>
+      </Modal>
 
       {/* ── 캘린더 그리드 ── */}
       <div
@@ -98,8 +177,6 @@ export function CalendarView({ todos, categories, onComplete, onUncomplete, onDe
             const hasOverdue  = dayTodos.some(t => !t.completed && isPast(parseISO(t.dueDate!)) && !isToday(parseISO(t.dueDate!)))
             const completedAll = dayTodos.length > 0 && dayTodos.every(t => t.completed)
             const hasActive   = dayTodos.some(t => !t.completed)
-
-            // 마지막 행 여부 (border-bottom 제거)
             const isLastRow = idx >= days.length - 7
 
             return (
