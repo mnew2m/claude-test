@@ -87,7 +87,13 @@ export function useTodos() {
     await supabase.from('todos').delete().eq('id', id)
   }
 
-  return { todos, loading, addTodo, updateTodo, completeTodo, uncompleteTodo, deleteTodo, refetch: fetchTodos }
+  const togglePin = async (id: string) => {
+    const todo = todos.find(t => t.id === id)
+    if (!todo) return
+    await updateTodo(id, { pinned: !todo.pinned })
+  }
+
+  return { todos, loading, addTodo, updateTodo, completeTodo, uncompleteTodo, deleteTodo, togglePin, refetch: fetchTodos }
 }
 
 function mapTodo(row: Record<string, unknown>): Todo {
@@ -110,6 +116,7 @@ function mapTodo(row: Record<string, unknown>): Todo {
     },
     parentId: row.parent_id as string | undefined,
     tags: (row.tags as string[]) ?? [],
+    pinned: (row.pinned as boolean) ?? false,
     createdAt: row.created_at as string,
   }
 }
@@ -132,6 +139,7 @@ function toRow(todo: Todo) {
     recurrence_end_date: todo.recurrence.endDate,
     parent_id: todo.parentId,
     tags: todo.tags,
+    pinned: todo.pinned ?? false,
     created_at: todo.createdAt,
   }
 }
@@ -155,5 +163,6 @@ function toPartialRow(input: Partial<Omit<Todo, 'id' | 'userId' | 'createdAt'>>)
   }
   if ('parentId' in input) row.parent_id = input.parentId ?? null
   if ('tags'     in input) row.tags      = input.tags
+  if ('pinned'   in input) row.pinned    = input.pinned ?? false
   return row
 }

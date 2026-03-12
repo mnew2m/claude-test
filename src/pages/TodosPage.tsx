@@ -106,7 +106,7 @@ const FILTERS: { id: Filter; label: string; icon: string }[] = [
 ]
 
 export function TodosPage() {
-  const { todos, loading, addTodo, updateTodo, completeTodo, uncompleteTodo, deleteTodo } = useTodos()
+  const { todos, loading, addTodo, updateTodo, completeTodo, uncompleteTodo, deleteTodo, togglePin } = useTodos()
   const { categories } = useCategories()
   const [filter, setFilter]       = useState<Filter>('today')
   const [viewMode, setViewMode]   = useState<ViewMode>('list')
@@ -163,15 +163,17 @@ export function TodosPage() {
     }
   }, [todos, filter, todayStr, sessionCompleted, doneSortKey, doneSortDir, doneRangeStart, doneRangeEnd, doneNoDate])
 
+  const pinSort = (a: typeof filtered[0], b: typeof filtered[0]) => (b.pinned ? 1 : 0) - (a.pinned ? 1 : 0)
+
   const categoryGroups = useMemo(() => {
     if (filtered.length === 0) return []
     const groups: { cat?: typeof categories[0]; todos: typeof filtered }[] = []
     for (const cat of categories) {
       const catTodos = filtered.filter(t => t.categoryId === cat.id)
-      if (catTodos.length > 0) groups.push({ cat, todos: catTodos })
+      if (catTodos.length > 0) groups.push({ cat, todos: [...catTodos].sort(pinSort) })
     }
     const noCategory = filtered.filter(t => !t.categoryId)
-    if (noCategory.length > 0) groups.push({ todos: noCategory })
+    if (noCategory.length > 0) groups.push({ todos: [...noCategory].sort(pinSort) })
     return groups
   }, [filtered, categories])
 
@@ -546,10 +548,10 @@ export function TodosPage() {
               const catGroups: { cat?: typeof categories[0]; todos: typeof group.todos }[] = []
               for (const cat of categories) {
                 const catTodos = group.todos.filter(t => t.categoryId === cat.id)
-                if (catTodos.length > 0) catGroups.push({ cat, todos: catTodos })
+                if (catTodos.length > 0) catGroups.push({ cat, todos: [...catTodos].sort(pinSort) })
               }
               const noCategory = group.todos.filter(t => !t.categoryId)
-              if (noCategory.length > 0) catGroups.push({ todos: noCategory })
+              if (noCategory.length > 0) catGroups.push({ todos: [...noCategory].sort(pinSort) })
               return (
                 <div key={group.label}>
                   <p className="text-[13px] font-semibold mb-2 px-1" style={{ color: 'var(--color-secondary)' }}>
@@ -577,6 +579,7 @@ export function TodosPage() {
                           onDelete={deleteTodo}
                           onEdit={handleEdit}
                           onAdd={openAdd}
+                          onPin={togglePin}
                           hideAddAction
                         />
                       </div>
@@ -625,6 +628,7 @@ export function TodosPage() {
                     onDelete={deleteTodo}
                     onEdit={handleEdit}
                     onAdd={openAdd}
+                    onPin={togglePin}
                     hideAddAction
                   />
                 </div>

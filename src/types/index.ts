@@ -30,6 +30,7 @@ export interface Todo {
   recurrence: Recurrence
   parentId?: string
   tags: string[]
+  pinned?: boolean
   createdAt: string
 }
 

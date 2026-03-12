@@ -11,6 +11,7 @@ interface TodoListProps {
   onEdit: (todo: Todo) => void
   onAdd: () => void
   onCopy?: (todo: Todo) => void
+  onPin?: (id: string) => void
   hideAddAction?: boolean
   emptyIcon?: string
   emptyTitle?: string
@@ -18,7 +19,7 @@ interface TodoListProps {
   emptyCompact?: boolean
 }
 
-export function TodoList({ todos, categories: _categories, onComplete, onUncomplete, onDelete, onEdit, onAdd, onCopy, hideAddAction, emptyIcon = '✅', emptyTitle = '할일이 없어요', emptyDescription = '새 할일을 추가해보세요', emptyCompact }: TodoListProps) {
+export function TodoList({ todos, categories: _categories, onComplete, onUncomplete, onDelete, onEdit, onAdd, onCopy, onPin, hideAddAction, emptyIcon = '✅', emptyTitle = '할일이 없어요', emptyDescription = '새 할일을 추가해보세요', emptyCompact }: TodoListProps) {
   if (todos.length === 0) {
     return (
       <EmptyState
@@ -37,7 +38,7 @@ export function TodoList({ todos, categories: _categories, onComplete, onUncompl
       style={{ background: 'var(--color-card)' }}
     >
       {todos.map((todo, i) => (
-        <div key={todo.id} className="px-4">
+        <div key={todo.id}>
           <TodoItem
             todo={todo}
             onComplete={onComplete}
@@ -45,6 +46,7 @@ export function TodoList({ todos, categories: _categories, onComplete, onUncompl
             onDelete={onDelete}
             onEdit={onEdit}
             onCopy={onCopy}
+            onPin={onPin}
             isLast={i === todos.length - 1}
           />
         </div>
