@@ -161,7 +161,7 @@ export function TodosPage() {
               return (
                 <button
                   key={f.id}
-                  onClick={() => setFilter(f.id)}
+                  onClick={() => { setFilter(f.id); setSessionCompleted(new Set()) }}
                   className="flex-shrink-0 flex items-center gap-1.5 px-4 py-1.5 rounded-full text-[14px] font-medium transition-all active:scale-95"
                   style={
                     filter === f.id
