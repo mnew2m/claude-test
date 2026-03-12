@@ -123,16 +123,18 @@ export function TodosPage() {
               </button>
             </div>
 
-            {/* 추가 버튼 */}
-            <button
-              onClick={() => openAdd()}
-              className="w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90 active:opacity-70 shadow-card"
-              style={{ background: 'var(--color-accent)' }}
-            >
-              <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
-                <path d="M9 3v12M3 9h12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
-              </svg>
-            </button>
+            {/* 추가 버튼 (캘린더뷰에서는 숨김) */}
+            {viewMode === 'list' && (
+              <button
+                onClick={() => openAdd()}
+                className="w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90 active:opacity-70 shadow-card"
+                style={{ background: 'var(--color-accent)' }}
+              >
+                <svg width="18" height="18" viewBox="0 0 18 18" fill="none">
+                  <path d="M9 3v12M3 9h12" stroke="white" strokeWidth="2.5" strokeLinecap="round"/>
+                </svg>
+              </button>
+            )}
           </div>
         </div>
 
