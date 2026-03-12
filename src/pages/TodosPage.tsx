@@ -1,4 +1,4 @@
-import { useState, useMemo } from 'react'
+import { useState, useMemo, useRef, useEffect } from 'react'
 import { useTodos } from '../hooks/useTodos'
 import { useCategories } from '../hooks/useCategories'
 import { TodoList } from '../components/todo/TodoList'
@@ -70,6 +70,17 @@ export function TodosPage() {
   }
 
   const [prefilledDate, setPrefilledDate] = useState<string | undefined>()
+  const filterScrollRef = useRef<HTMLDivElement>(null)
+
+  useEffect(() => {
+    const el = filterScrollRef.current
+    if (!el) return
+    const handler = (e: WheelEvent) => {
+      if (e.deltaY !== 0) { e.preventDefault(); el.scrollLeft += e.deltaY }
+    }
+    el.addEventListener('wheel', handler, { passive: false })
+    return () => el.removeEventListener('wheel', handler)
+  }, [])
 
   const openAdd = (date?: string) => {
     setEditTodo(null)
@@ -140,7 +151,7 @@ export function TodosPage() {
 
         {/* 리스트 뷰일 때만 필터 표시 */}
         {viewMode === 'list' && (
-          <div className="flex gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
+          <div ref={filterScrollRef} className="flex gap-2 mt-3 overflow-x-auto no-scrollbar pb-1">
             {FILTERS.map(f => {
               const count =
                 f.id === 'done'    ? todos.filter(t => t.completed).length :
