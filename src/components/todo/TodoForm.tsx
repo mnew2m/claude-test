@@ -22,13 +22,14 @@ interface TodoFormProps {
   }) => void
   categories: Category[]
   initialValues?: Partial<Todo>
+  isEditing?: boolean
 }
 
 const defaultRecurrence: Recurrence = { type: 'none', interval: 1 }
 
 const inputCls = 'w-full px-4 py-3 text-[16px] text-primary placeholder:text-muted outline-none'
 
-export function TodoForm({ open, onClose, onSubmit, categories, initialValues }: TodoFormProps) {
+export function TodoForm({ open, onClose, onSubmit, categories, initialValues, isEditing = false }: TodoFormProps) {
   const [title, setTitle] = useState(initialValues?.title ?? '')
   const [description, setDescription] = useState(initialValues?.description ?? '')
   const [dueDate, setDueDate] = useState(initialValues?.dueDate ? initialValues.dueDate.substring(0, 10) : '')
@@ -59,7 +60,7 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
 
   return (
     <>
-    <Modal open={open} onClose={onClose} title={initialValues ? '할일 수정' : '새 할일'}>
+    <Modal open={open} onClose={onClose} title={isEditing ? '할일 수정' : '새 할일'}>
       <div className="px-4 pt-3 pb-6 space-y-4">
 
         {/* Title + Description */}
@@ -170,7 +171,7 @@ export function TodoForm({ open, onClose, onSubmit, categories, initialValues }:
           className="w-full py-3.5 rounded-xl text-[16px] font-semibold text-white transition-opacity active:opacity-70 disabled:opacity-40"
           style={{ background: 'var(--color-accent)' }}
         >
-          {initialValues ? '수정 완료' : '추가'}
+          {isEditing ? '수정 완료' : '추가'}
         </button>
       </div>
     </Modal>

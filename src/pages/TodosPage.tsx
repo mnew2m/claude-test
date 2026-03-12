@@ -73,7 +73,7 @@ export function TodosPage() {
 
   const openAdd = (date?: string) => {
     setEditTodo(null)
-    setPrefilledDate(date)
+    setPrefilledDate(date ?? (filter === 'today' ? format(new Date(), 'yyyy-MM-dd') : undefined))
     setFormOpen(true)
   }
 
@@ -215,7 +215,8 @@ export function TodosPage() {
         onClose={() => { setFormOpen(false); setEditTodo(null); setPrefilledDate(undefined) }}
         onSubmit={handleFormSubmit}
         categories={categories}
-        initialValues={editTodo ?? (prefilledDate ? { dueDate: new Date(prefilledDate).toISOString() } : undefined)}
+        initialValues={editTodo ?? (prefilledDate ? { dueDate: prefilledDate } : undefined)}
+        isEditing={!!editTodo}
       />
     </div>
   )
