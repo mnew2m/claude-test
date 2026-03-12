@@ -14,10 +14,10 @@ export function CompletionChart({ data, title }: CompletionChartProps) {
     >
       <h3 className="text-[15px] font-semibold text-primary mb-4 tracking-[-0.2px]">{title}</h3>
       <ResponsiveContainer width="100%" height={148}>
-        <BarChart data={data} margin={{ top: 0, right: 0, left: -28, bottom: 0 }}>
+        <BarChart data={data} margin={{ top: 0, right: 0, left: 0, bottom: 0 }}>
           <CartesianGrid strokeDasharray="3 3" stroke="var(--color-border)" vertical={false} />
           <XAxis dataKey="date" tick={{ fontSize: 11, fill: 'var(--color-secondary)' }} axisLine={false} tickLine={false} />
-          <YAxis tick={{ fontSize: 11, fill: 'var(--color-secondary)' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
+          <YAxis width={44} tick={{ fontSize: 11, fill: 'var(--color-secondary)' }} axisLine={false} tickLine={false} domain={[0, 100]} tickFormatter={v => `${v}%`} />
           <Tooltip
             formatter={(value: number) => [`${value}%`, '완료율']}
             contentStyle={{
