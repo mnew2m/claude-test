@@ -11,12 +11,13 @@ interface TodoItemProps {
   onDelete: (id: string) => void
   onEdit: (todo: Todo) => void
   onCopy?: (todo: Todo) => void
+  isLast?: boolean
 }
 
 const SWIPE_THRESHOLD = 72   // px: 이 이상 당기면 삭제 버튼 노출
 const SWIPE_CONFIRM   = 160  // px: 이 이상 당기면 바로 confirm 오픈
 
-export function TodoItem({ todo, categories, onComplete, onUncomplete, onDelete, onEdit, onCopy }: TodoItemProps) {
+export function TodoItem({ todo, categories, onComplete, onUncomplete, onDelete, onEdit, onCopy, isLast }: TodoItemProps) {
   const [confirmOpen, setConfirmOpen] = useState(false)
   const [translateX, setTranslateX] = useState(0)
   const [revealed, setRevealed] = useState(false)
@@ -93,7 +94,7 @@ export function TodoItem({ todo, categories, onComplete, onUncomplete, onDelete,
       {/* Swipe wrapper */}
       <div
         className="relative overflow-hidden"
-        style={{ borderBottom: '0.5px solid var(--color-separator)' }}
+        style={{ borderBottom: isLast ? 'none' : '0.5px solid var(--color-separator)' }}
       >
         {/* Delete background (스와이프 중일 때만 렌더) */}
         {translateX < 0 && (

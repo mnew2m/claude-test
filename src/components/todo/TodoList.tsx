@@ -37,7 +37,7 @@ export function TodoList({ todos, categories, onComplete, onUncomplete, onDelete
       style={{ background: 'var(--color-card)' }}
     >
       {todos.map((todo, i) => (
-        <div key={todo.id} className="px-4" style={i === todos.length - 1 ? { borderBottom: 'none' } : {}}>
+        <div key={todo.id} className="px-4">
           <TodoItem
             todo={todo}
             categories={categories}
@@ -46,6 +46,7 @@ export function TodoList({ todos, categories, onComplete, onUncomplete, onDelete
             onDelete={onDelete}
             onEdit={onEdit}
             onCopy={onCopy}
+            isLast={i === todos.length - 1}
           />
         </div>
       ))}
