@@ -1,6 +1,6 @@
 import { useState } from 'react'
 import { useAuth } from '../context/AuthContext'
-import { useTheme } from '../context/ThemeContext'
+import { useTheme, ACCENT_COLORS } from '../context/ThemeContext'
 import { useCategories } from '../hooks/useCategories'
 import { ConfirmDialog } from '../components/common/ConfirmDialog'
 import {
@@ -182,7 +182,7 @@ function CategoryForm({ initial, onSave, onCancel }: CatFormProps) {
 
 export function SettingsPage() {
   const { user, signOut }    = useAuth()
-  const { theme, setTheme }  = useTheme()
+  const { theme, setTheme, accentColor, setAccentColor } = useTheme()
   const { categories, addCategory, updateCategory, deleteCategory, reorderCategories } = useCategories()
 
   const [signOutConfirm, setSignOutConfirm] = useState(false)
@@ -250,7 +250,7 @@ export function SettingsPage() {
         <section>
           <p className="text-[13px] font-semibold uppercase tracking-wider text-secondary mb-2 px-1">화면</p>
           <div className="rounded-xl overflow-hidden shadow-card">
-            <SettingRow label="테마" first last>
+            <SettingRow label="테마" first>
               <div className="flex gap-2">
                 {(['light', 'dark'] as const).map(t => (
                   <button
@@ -268,6 +268,30 @@ export function SettingsPage() {
                 ))}
               </div>
             </SettingRow>
+            <div className="px-4 py-3 bg-card" style={{ borderTop: '0.5px solid var(--color-separator)', borderRadius: '0 0 12px 12px' }}>
+              <p className="text-[16px] text-primary mb-3">대표 색상</p>
+              <div className="flex gap-3 flex-wrap">
+                {ACCENT_COLORS.map(c => (
+                  <button
+                    key={c.value}
+                    onClick={() => setAccentColor(c.value)}
+                    className="flex flex-col items-center gap-1.5 transition-all active:scale-90"
+                  >
+                    <div
+                      className="w-9 h-9 rounded-full flex items-center justify-center"
+                      style={{ background: c.value, boxShadow: accentColor === c.value ? `0 0 0 2px var(--color-card), 0 0 0 4px ${c.value}` : 'none' }}
+                    >
+                      {accentColor === c.value && (
+                        <svg width="14" height="14" viewBox="0 0 14 14" fill="none">
+                          <path d="M2.5 7l3.5 3.5 5.5-6" stroke="white" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round"/>
+                        </svg>
+                      )}
+                    </div>
+                    <span className="text-[11px]" style={{ color: accentColor === c.value ? c.value : 'var(--color-secondary)' }}>{c.name}</span>
+                  </button>
+                ))}
+              </div>
+            </div>
           </div>
         </section>
 
