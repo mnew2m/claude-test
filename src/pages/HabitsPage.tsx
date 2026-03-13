@@ -126,6 +126,7 @@ export function HabitsPage() {
   const [formOpen, setFormOpen] = useState(false)
   const [editHabit, setEditHabit] = useState<Habit | null>(null)
   const [detailHabit, setDetailHabit] = useState<Habit | null>(null)
+  const [formKey, setFormKey] = useState(0)
 
   const today = todayString()
   const [selectedDate, setSelectedDate] = useState(today)
@@ -174,7 +175,7 @@ export function HabitsPage() {
             )}
           </div>
           <button
-            onClick={() => { setEditHabit(null); setFormOpen(true) }}
+            onClick={() => { setEditHabit(null); setFormKey(k => k + 1); setFormOpen(true) }}
             className="mb-1 w-9 h-9 rounded-full flex items-center justify-center transition-all active:scale-90 active:opacity-70 shadow-card"
             style={{ background: 'var(--color-accent)' }}
           >
@@ -274,13 +275,13 @@ export function HabitsPage() {
             onDelete={deleteHabit}
             onArchive={handleArchive}
             onDetail={setDetailHabit}
-            onAdd={() => { setEditHabit(null); setFormOpen(true) }}
+            onAdd={() => { setEditHabit(null); setFormKey(k => k + 1); setFormOpen(true) }}
           />
         )}
       </div>
 
       <HabitForm
-        key={editHabit?.id ?? 'new'}
+        key={editHabit?.id ?? `new_${formKey}`}
         open={formOpen}
         onClose={() => { setFormOpen(false); setEditHabit(null) }}
         onSubmit={handleFormSubmit}

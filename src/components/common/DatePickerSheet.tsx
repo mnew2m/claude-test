@@ -214,7 +214,7 @@ export function DatePickerSheet({
           )}
           <button
             onClick={handleConfirm}
-            disabled={!selected}
+            disabled={mode !== 'time' && !selected}
             className="flex-[2] py-3 rounded-xl text-[15px] font-semibold text-white transition-opacity active:opacity-70 disabled:opacity-40"
             style={{ background: 'var(--color-accent)' }}
           >
