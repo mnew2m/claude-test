@@ -9,14 +9,15 @@ interface HabitCardProps {
   habit: Habit
   completions: HabitCompletion[]
   categories: Category[]
-  isCompletedToday: boolean
+  isCompleted: boolean
   onToggle: (habitId: string) => void
   onEdit: (habit: Habit) => void
   onDelete: (habitId: string) => void
   onArchive: (habitId: string) => void
+  onDetail: (habit: Habit) => void
 }
 
-export function HabitCard({ habit, completions, categories, isCompletedToday, onToggle, onEdit, onDelete, onArchive }: HabitCardProps) {
+export function HabitCard({ habit, completions, categories, isCompleted, onToggle, onEdit, onDelete, onArchive, onDetail }: HabitCardProps) {
   const [confirmDelete, setConfirmDelete] = useState(false)
   const { current, longest } = calculateStreak(completions, habit)
   const weekDays = getLast7DaysStatus(completions, habit)
@@ -30,8 +31,9 @@ export function HabitCard({ habit, completions, categories, isCompletedToday, on
       >
         {/* Color bar + header */}
         <div
-          className="px-4 pt-3.5 pb-3 flex items-start gap-3"
+          className="px-4 pt-3.5 pb-3 flex items-start gap-3 cursor-pointer active:opacity-70"
           style={{ borderLeft: `4px solid ${habit.color}` }}
+          onClick={() => onDetail(habit)}
         >
           <div className="flex-1 min-w-0">
             <div className="flex items-center gap-2 flex-wrap">
@@ -52,7 +54,7 @@ export function HabitCard({ habit, completions, categories, isCompletedToday, on
           {/* Context actions */}
           <div className="flex gap-0.5 flex-shrink-0">
             <button
-              onClick={() => onEdit(habit)}
+              onClick={e => { e.stopPropagation(); onEdit(habit) }}
               className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
               style={{ color: 'var(--color-muted)' }}
             >
@@ -62,7 +64,7 @@ export function HabitCard({ habit, completions, categories, isCompletedToday, on
               </svg>
             </button>
             <button
-              onClick={() => onArchive(habit.id)}
+              onClick={e => { e.stopPropagation(); onArchive(habit.id) }}
               className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
               style={{ color: 'var(--color-muted)' }}
             >
@@ -73,7 +75,7 @@ export function HabitCard({ habit, completions, categories, isCompletedToday, on
               </svg>
             </button>
             <button
-              onClick={() => setConfirmDelete(true)}
+              onClick={e => { e.stopPropagation(); setConfirmDelete(true) }}
               className="w-8 h-8 flex items-center justify-center rounded-full transition-opacity active:opacity-50"
               style={{ color: 'var(--color-muted)' }}
             >
@@ -96,15 +98,15 @@ export function HabitCard({ habit, completions, categories, isCompletedToday, on
 
           {/* Check button */}
           <button
-            onClick={() => onToggle(habit.id)}
+            onClick={e => { e.stopPropagation(); onToggle(habit.id) }}
             className="w-[52px] h-[52px] rounded-full flex items-center justify-center transition-all active:scale-90 shadow-card"
             style={
-              isCompletedToday
+              isCompleted
                 ? { background: habit.color, boxShadow: `0 4px 16px ${habit.color}55` }
                 : { background: 'var(--color-fill)', color: 'var(--color-muted)' }
             }
           >
-            {isCompletedToday ? (
+            {isCompleted ? (
               <svg width="24" height="24" viewBox="0 0 24 24" fill="none">
                 <path d="M5 12l5 5 9-10" stroke="white" strokeWidth="2.5" strokeLinecap="round" strokeLinejoin="round"/>
               </svg>

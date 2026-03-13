@@ -105,6 +105,9 @@ export function useHabits() {
   const isCompletedToday = (habitId: string) =>
     completions.some(c => c.habitId === habitId && c.completedDate === todayString())
 
+  const isCompletedOnDate = (habitId: string, date: string) =>
+    completions.some(c => c.habitId === habitId && c.completedDate === date)
+
   return {
     habits,
     completions,
@@ -115,6 +118,7 @@ export function useHabits() {
     toggleCompletion,
     getCompletionsForHabit,
     isCompletedToday,
+    isCompletedOnDate,
     refetch: fetchHabits,
   }
 }

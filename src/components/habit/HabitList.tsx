@@ -6,24 +6,28 @@ interface HabitListProps {
   habits: Habit[]
   completions: HabitCompletion[]
   categories: Category[]
-  isCompletedToday: (id: string) => boolean
+  selectedDate: string
+  isCompletedOnDate: (id: string, date: string) => boolean
   getCompletionsForHabit: (id: string) => HabitCompletion[]
   onToggle: (id: string) => void
   onEdit: (habit: Habit) => void
   onDelete: (id: string) => void
   onArchive: (id: string) => void
+  onDetail: (habit: Habit) => void
   onAdd: () => void
 }
 
 export function HabitList({
   habits,
   categories,
-  isCompletedToday,
+  selectedDate,
+  isCompletedOnDate,
   getCompletionsForHabit,
   onToggle,
   onEdit,
   onDelete,
   onArchive,
+  onDetail,
   onAdd,
 }: HabitListProps) {
   if (habits.length === 0) {
@@ -45,11 +49,12 @@ export function HabitList({
           habit={habit}
           completions={getCompletionsForHabit(habit.id)}
           categories={categories}
-          isCompletedToday={isCompletedToday(habit.id)}
+          isCompleted={isCompletedOnDate(habit.id, selectedDate)}
           onToggle={onToggle}
           onEdit={onEdit}
           onDelete={onDelete}
           onArchive={onArchive}
+          onDetail={onDetail}
         />
       ))}
     </div>
